@@ -9,12 +9,19 @@ whenever application state changes, this container will rerender bc of redux con
 import React, { Component } from 'react';
 // Glue between react and redux
 import { connect } from 'react-redux';
+import { selectBook } from '../actions/index';
+import { bindActionCreators } from 'redux';
 
 class BookList extends Component {
   renderList() {
     return this.props.books.map((book) => {
       return (
-        <li key={book.title} className="list-group-item">{book.title}</li>
+        <li
+          key={book.title}
+          onClick={() => this.props.selectBook(book)}
+          className="list-group-item">
+          {book.title}
+        </li>
       );
     })
   }
@@ -35,5 +42,9 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ selectBook: selectBook }, dispatch)
+}
+
 // redux connect takes a function and a component and creates a container
-export default connect(mapStateToProps)(BookList);
+export default connect(mapStateToProps, mapDispatchToProps)(BookList);
